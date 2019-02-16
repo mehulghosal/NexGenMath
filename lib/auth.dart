@@ -51,17 +51,20 @@ class Authentication {
       if (user != null && isLoggedIn) {
         final QuerySnapshot result =
         await Firestore.instance.collection('users').where(
-            'id', isEqualTo: user.uid).getDocuments();
+            'email', isEqualTo: user.email).getDocuments();
         final List<DocumentSnapshot> documents = result.documents;
         if (documents.length == 0) {
           Firestore.instance
               .collection('users')
-              .document(user.uid)
+              .document(user.email)
               .setData({
             'id': user.uid,
             'name': user.displayName,
             'email': user.email,
             'photoUrl': user.photoUrl,
+            'classesLearned': [],
+            'classesProficient': [],
+            'classesMastered': []
           });
           await prefs.setString('id', user.uid);
           await prefs.setString('email', user.email);
