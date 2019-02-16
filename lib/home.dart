@@ -6,6 +6,8 @@ import 'lessons.dart';
 import 'practice.dart';
 
 class Home extends StatefulWidget {
+  Home({Key key}) : super(key: key);
+
   @override
   HomeState createState() => new HomeState();
 }
