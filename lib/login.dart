@@ -31,10 +31,11 @@ class LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      backgroundColor: Theme.of(context).primaryColorLight,
       body: Stack (
         children: <Widget>[
           Container (
-            alignment: Alignment(0.0, -0.8),
+            alignment: Alignment(0.0, -0.65),
             child: Text (
               'NexGenMath',
               style: new TextStyle(
@@ -44,17 +45,18 @@ class LoginState extends State<Login> {
               textAlign: TextAlign.center,
             ),
           ),
-          Center(
-            child: FlatButton(
+          Container(
+            alignment: Alignment(0, .1),
+            child: MaterialButton(
                 onPressed: () => auth.signIn(context),
                 child: Text(
                   'SIGN IN WITH GOOGLE',
                   style: TextStyle(fontSize: 14.0),
                 ),
-                color: Color(0xffdd4b39),
-                highlightColor: Color(0xffff7f7f),
-                splashColor: Colors.transparent,
-                textColor: Colors.white,
+                color: Theme.of(context).buttonColor,
+                highlightColor: Theme.of(context).accentColor,
+                splashColor: Theme.of(context).accentColor,
+                textColor: Theme.of(context).primaryColorLight,
                 padding: EdgeInsets.fromLTRB(30.0, 15.0, 30.0, 15.0)
             ),
           ),
