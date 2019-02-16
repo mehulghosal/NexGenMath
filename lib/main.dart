@@ -17,6 +17,7 @@ class App extends StatelessWidget {
           secondaryHeaderColor: const Color(0xFF46494c),
           buttonColor: const Color(0xFF46494c),
           errorColor: const Color(0xFFFFAD32),
+          splashColor: const Color(0xFFc5c3c6),
           accentColor: const Color(0xFF1985a1),
           unselectedWidgetColor: const Color(0xFFEAEBF3),
           fontFamily: 'Roboto'
