@@ -6,6 +6,7 @@ import 'practice.dart';
 
 class Dashboard extends StatefulWidget {
   static String title = 'NexGenMath';
+  static DashboardState of(BuildContext context) => context.ancestorStateOfType(const TypeMatcher<DashboardState>());
   @override
   DashboardState createState() => new DashboardState();
 }
@@ -110,7 +111,7 @@ class DashboardState extends State<Dashboard> {
           items: [
             new BottomNavigationBarItem(
               icon: new Icon(
-                Icons.chat_bubble,
+                Icons.question_answer,
                 color: const Color(0xFFFFFFFF),
               ),
               title: new Text(
@@ -134,7 +135,7 @@ class DashboardState extends State<Dashboard> {
             ),
             new BottomNavigationBarItem(
                 icon: new Icon(
-                  Icons.person,
+                  Icons.record_voice_over,
                   color: const Color(0xFFFFFFFF),
                 ),
                 title: new Text(

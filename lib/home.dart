@@ -51,8 +51,7 @@ class HomeState extends State<Home> {
               splashColor: Theme.of(context).accentColor,
               textColor: Theme.of(context).primaryColorLight,
               onPressed: () {
-                DashboardState.navigationTapped(3)
-//                Navigator.push(context, new MaterialPageRoute(builder: (context) => new Practice()));
+                Dashboard.of(context).navigationTapped(0);
               },
               child: Text(
                   'Start Practicing',
@@ -73,8 +72,7 @@ class HomeState extends State<Home> {
               splashColor: Theme.of(context).accentColor,
               textColor: Theme.of(context).primaryColorLight,
               onPressed: () {
-                Navigator.push(context,
-                    new MaterialPageRoute(builder: (context) => new Lessons()));
+                Dashboard.of(context).navigationTapped(2);
               },
               child: Text(
                 'Next Lesson',
