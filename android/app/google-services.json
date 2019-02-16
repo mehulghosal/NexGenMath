@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "927389697501",
+    "firebase_url": "https://nexgenmath.firebaseio.com",
+    "project_id": "nexgenmath",
+    "storage_bucket": "nexgenmath.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:927389697501:android:0213ba4b2d2dc22e",
+        "android_client_info": {
+          "package_name": "com.nexgenmath.nexgenmath"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "927389697501-jmq13fun65t8rqe852s4ovg4o6rp980l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnCV2m8LP6K-YrqSXjhFEsgfAo0KyBxdU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
