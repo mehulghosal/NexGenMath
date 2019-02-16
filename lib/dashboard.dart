@@ -111,7 +111,7 @@ class DashboardState extends State<Dashboard> {
           items: [
             new BottomNavigationBarItem(
               icon: new Icon(
-                Icons.question_answer,
+                Icons.import_contacts,
                 color: const Color(0xFFFFFFFF),
               ),
               title: new Text(
@@ -135,7 +135,7 @@ class DashboardState extends State<Dashboard> {
             ),
             new BottomNavigationBarItem(
                 icon: new Icon(
-                  Icons.record_voice_over,
+                  Icons.school,
                   color: const Color(0xFFFFFFFF),
                 ),
                 title: new Text(

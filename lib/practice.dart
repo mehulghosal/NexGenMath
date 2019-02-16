@@ -25,19 +25,21 @@ class PracticeState extends State<Practice> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      body: new Center(
-        child: new Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Text(
-              'Practice ' + name.split(' ')[0] + '!',
-              style: new TextStyle(
-                color: Colors.black,
-                fontSize: 30,
-              ),
-            ),
-          ],
-        ),
+      backgroundColor: Theme.of(context).primaryColorLight,
+      body: new Stack(
+        children: <Widget>[
+
+//          Container(
+//            alignment: Alignment(0, -.3),
+//            child: Text(
+//              'Lessons ' + name.split(' ')[0] + '!',
+//              style: new TextStyle(
+//                color: Colors.black,
+//                fontSize: 30,
+//              ),
+//            ),
+//          )
+        ],
       ),
     );
   }
