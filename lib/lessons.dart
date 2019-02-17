@@ -51,10 +51,10 @@ class LessonState extends State<Lessons> { //with AutomaticKeepAliveClientMixin<
   }
 
   void _readLocal() {
+    Dashboard.title = 'NexGenMath';
     SharedPreferences.getInstance().then( (yes) {
       prefs = yes;
       name = prefs.getString('name') ?? '';
-      Dashboard.title = 'NexGenMath - Lessons';
       setState(() {
       });
     });
@@ -86,6 +86,7 @@ class LessonState extends State<Lessons> { //with AutomaticKeepAliveClientMixin<
 
   @override
   Widget build(BuildContext context) {
+    Dashboard.title = 'NexGenMath';
     return new FutureBuilder<String>(
         future: loadWidget(context, isInit),
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {

@@ -46,6 +46,14 @@ class LoginState extends State<Login> {
             ),
           ),
           Container(
+            alignment: Alignment(0, -0.3),
+            child: Image.asset(
+              'assets/icon.png',
+              width: 200.0,
+              height: 200.0,
+            )
+          ),
+          Container(
             alignment: Alignment(0, .1),
             child: MaterialButton(
                 onPressed: () => auth.signIn(context),

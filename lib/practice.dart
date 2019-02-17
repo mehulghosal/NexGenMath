@@ -55,7 +55,6 @@ class PracticeState extends State<Practice>{
   }
 
   void _readLocal() {
-    Dashboard.title = 'NexGenMath - Practice';
     SharedPreferences.getInstance().then( (yes) {
       prefs = yes;
       name = prefs.getString('name') ?? '';
@@ -88,6 +87,7 @@ class PracticeState extends State<Practice>{
 
   @override
   Widget build(BuildContext context) {
+    Dashboard.title = 'NexGenMath';
     return new FutureBuilder<String>(
         future: loadWidget(context, isInit),
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {

@@ -28,6 +28,7 @@ class HomeState extends State<Home> {
   }
   @override
   Widget build(BuildContext context) {
+    Dashboard.title = 'NexGenMath';
     return new Scaffold(
       backgroundColor: Theme.of(context).primaryColorLight,
       body: new Stack(
