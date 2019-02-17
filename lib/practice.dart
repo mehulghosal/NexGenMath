@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:convert';
+import 'dart:async';
 import 'dashboard.dart';
 import 'api.dart';
 import 'lessons.dart';
@@ -31,7 +32,9 @@ class Practice extends StatefulWidget {
   PracticeState createState() => new PracticeState();
 }
 
-class PracticeState extends State<Practice> with AutomaticKeepAliveClientMixin<Practice> {
+class PracticeState extends State<Practice>{
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
   SharedPreferences prefs;
   String name = '';
   bool isInit = false;
@@ -52,14 +55,35 @@ class PracticeState extends State<Practice> with AutomaticKeepAliveClientMixin<P
   }
 
   void _readLocal() {
+    Dashboard.title = 'NexGenMath - Practice';
     SharedPreferences.getInstance().then( (yes) {
       prefs = yes;
       name = prefs.getString('name') ?? '';
-      Dashboard.title = 'NexGenMath';
       setState(() {
       });
     });
+  }
 
+  void refresh() {
+    Dashboard.of(context).onPageChanged(0);
+    build(context);
+  }
+
+  Future<void> _handleRefresh() {
+    final Completer<void> completer = Completer<void>();
+    Timer(const Duration(seconds: 1), () { completer.complete(); });
+    return completer.future.then<void>((_) {
+      Dashboard.of(context).onPageChanged(0);
+      _scaffoldKey.currentState?.showSnackBar(SnackBar(
+          content: const Text('Refresh complete'),
+          action: SnackBarAction(
+              label: 'RETRY',
+              onPressed: () {
+                _refreshIndicatorKey.currentState.show();
+              }
+          )
+      ));
+    });
   }
 
   @override
@@ -98,7 +122,10 @@ class PracticeState extends State<Practice> with AutomaticKeepAliveClientMixin<P
             });
 
             isInit = false;
-            return new ListView.builder(
+            return new RefreshIndicator(
+                key: _refreshIndicatorKey,
+                onRefresh: _handleRefresh,
+                child: ListView.builder(
                 itemCount: listItems.length,
                 itemBuilder: (context, index) {
                   final item = listItems[index];
@@ -121,7 +148,7 @@ class PracticeState extends State<Practice> with AutomaticKeepAliveClientMixin<P
                     Icon rightIcon;
                     if(item.haveLearned == 0)
                       rightIcon = new Icon(Icons.indeterminate_check_box ,color: const Color(0xFF000000));
-                    else if(item.mastery == 0)
+                    else if(item.mastery == 1)
                       rightIcon = new Icon(Icons.radio_button_unchecked ,color: const Color(0xFF000000));
                     else
                       rightIcon = new Icon(Icons.star ,color: const Color(0xFF000000));
@@ -130,8 +157,11 @@ class PracticeState extends State<Practice> with AutomaticKeepAliveClientMixin<P
                     if(item.haveLearned == 0) {
                       state = "Need to Learn";
                     }
-                    else {
+                    else if(item.mastery == 1) {
                       state = "Ready to Practice";
+                    }
+                    else {
+                      state = "Keep your Knowledge Fresh! Practice More!";
                     }
                     if(item.haveLearned == 1) {
                       return ListTile(
@@ -162,6 +192,7 @@ class PracticeState extends State<Practice> with AutomaticKeepAliveClientMixin<P
                     }
                   }
                 }
+            )
             );
           }
         });

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'api.dart';
 
@@ -15,6 +16,7 @@ class ProblemViewer extends StatefulWidget {
 
 class ProblemViewerState extends State<ProblemViewer> with AutomaticKeepAliveClientMixin<ProblemViewer> {
   final String id;
+  String email;
   String problem;
   bool right = false;
   final numText = TextEditingController();
@@ -40,20 +42,27 @@ class ProblemViewerState extends State<ProblemViewer> with AutomaticKeepAliveCli
     List<String> s = ans.split("}");
     int numAns = int.parse(s[0].substring(1));
     int denAns = int.parse(s[1].substring(1));
+
+    int right = 0;
+    String r;
     if (questionType!="cde3ga0zlmRWzPPyCFgV" && n == numAns && d == denAns){ //equal -- right ans
-      right = true;
-      return "Your answer is correct! Yay :)";
+      right = 1;
+      r = "Your answer is correct! Yay :)";
     }
     //only lin eq has simplifying
     else if(questionType=="w7N6Foj7vLd8q6l1j66R" && (numAns/denAns - n/d)<.0000001 && sign(n/d) == sign(numAns/denAns)){//equal but not simplified
-      return "Your answer is technically correct, but it is not fully simplified";
+      r =  "Your answer is technically correct, but it is not fully simplified";
     }
     else if(questionType=="cde3ga0zlmRWzPPyCFgV" && n == numAns){
-      return "Your answer is correct! Yay :)";
+      right  = 1;
+      r =  "Your answer is correct! Yay :)";
     }
     else{//not eqal - wrong
-      return "Wrong answer, try again!";
+      r =  "Wrong answer, try again!";
     }
+    if(right == 1)
+      API.markAsProficient(email, questionType);
+    return r;
   }
 
   @override
@@ -86,8 +95,8 @@ class ProblemViewerState extends State<ProblemViewer> with AutomaticKeepAliveCli
             }
             String a, b;
             if (id == "w7N6Foj7vLd8q6l1j66R") {
-              a = "NUMERATOR";
-              b = "DENOMINATOR";
+              a = "NUMERATOR of your Solution";
+              b = "DENOMINATOR of your Solution";
             }
             else if(id == "vEpLFEDV9uvWcsCN3pQ4") {
               a = "LENGTH";
@@ -128,18 +137,20 @@ class ProblemViewerState extends State<ProblemViewer> with AutomaticKeepAliveCli
                           child: TextField(
                             controller: numText,
                             decoration: new InputDecoration(
-                                labelText: "Enter The " + a + " for your solution"),
+                                labelText: a),
                             keyboardType: TextInputType.number,
                           ),
                         ),
-                        Container(
+                        b != null ? Container(
                           alignment: Alignment(0, -0.25),
                           child: TextField(
                             controller: denText,
                             decoration: new InputDecoration(
-                                labelText: "Enter The " + b + " for your solution"),
+                                labelText: b),
                             keyboardType: TextInputType.number,
                           ),
+                        ) :  Container(
+                            alignment: Alignment(0, -0.25)
                         ),
                         Container(
                             alignment: Alignment(0, 0),
@@ -164,7 +175,7 @@ class ProblemViewerState extends State<ProblemViewer> with AutomaticKeepAliveCli
                                     builder: (context) {
                                       return AlertDialog(
                                         content: Text(checkAns(
-                                            numText.text, denText.text,
+                                            numText.text, b != null ? denText.text : "0",
                                             info['answer'], this.id)),
                                       );
                                     }
@@ -240,6 +251,9 @@ class ProblemViewerState extends State<ProblemViewer> with AutomaticKeepAliveCli
 
   @protected
   Future<String> loadWidget(BuildContext context) async {
+    SharedPreferences.getInstance().then( (prefs) {
+      email = prefs.getString("email");
+    });
     return API.getProblem(id);
   }
 }

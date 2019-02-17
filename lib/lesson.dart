@@ -9,6 +9,9 @@ import 'dashboard.dart';
 import 'lessons.dart';
 
 class Lesson extends StatelessWidget {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
+  
   // Declare a field that holds the Todo
   final String id;
   final String name;
