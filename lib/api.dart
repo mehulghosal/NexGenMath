@@ -31,5 +31,14 @@ class API {
       return response.body;
     });
   }
+  static Future<String> markAsDone(String e, String id) {
+    debugPrint("started api call");
+    var url = "https://us-central1-nexgenmath.cloudfunctions.net/markAsLearned?email=" + e + "&lessonID=" + id;
+    debugPrint(url);
+    return http.post(url).then((response) {
+      debugPrint("finished api call");
+      return response.body;
+    });
+  }
 
 }

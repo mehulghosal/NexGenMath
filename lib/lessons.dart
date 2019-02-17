@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:convert';
+import 'dart:async';
 import 'dashboard.dart';
 import 'api.dart';
 import 'lesson.dart';
@@ -26,9 +27,13 @@ class Lessons extends StatefulWidget {
   @override
   Lessons({Key key}) : super(key: key);
   LessonState createState() => new LessonState();
+  static LessonState of(BuildContext context) => context.ancestorStateOfType(const TypeMatcher<LessonState>());
 }
 
-class LessonState extends State<Lessons> with AutomaticKeepAliveClientMixin<Lessons> {
+class LessonState extends State<Lessons> { //with AutomaticKeepAliveClientMixin<Lessons> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
+
   SharedPreferences prefs;
   String name = '';
   bool isInit = false;
@@ -55,6 +60,28 @@ class LessonState extends State<Lessons> with AutomaticKeepAliveClientMixin<Less
     });
   }
 
+  void refresh() {
+    Dashboard.of(context).onPageChanged(0);
+    build(context);
+  }
+
+  Future<void> _handleRefresh() {
+    final Completer<void> completer = Completer<void>();
+    Timer(const Duration(seconds: 1), () { completer.complete(); });
+    return completer.future.then<void>((_) {
+      Dashboard.of(context).onPageChanged(0);
+      _scaffoldKey.currentState?.showSnackBar(SnackBar(
+          content: const Text('Refresh complete'),
+          action: SnackBarAction(
+              label: 'RETRY',
+              onPressed: () {
+                _refreshIndicatorKey.currentState.show();
+              }
+          )
+      ));
+    });
+  }
+
 
 
   @override
@@ -65,7 +92,7 @@ class LessonState extends State<Lessons> with AutomaticKeepAliveClientMixin<Less
           if(!snapshot.hasData) {
             return new Scaffold(
               appBar: AppBar(
-                title: Text(name),
+                title: Text(""),
                 leading: IconButton(
                     icon: Icon(Icons.arrow_back, color: Color(0xFFFFFFFFF)),
                     onPressed: () {
@@ -102,7 +129,10 @@ class LessonState extends State<Lessons> with AutomaticKeepAliveClientMixin<Less
             });
 
             isInit = false;
-            return new ListView.builder(
+            return new RefreshIndicator(
+                key: _refreshIndicatorKey,
+                onRefresh: _handleRefresh,
+                child: ListView.builder(
                 itemCount: listItems.length,
                 itemBuilder: (context, index) {
                   final item = listItems[index];
@@ -171,10 +201,11 @@ class LessonState extends State<Lessons> with AutomaticKeepAliveClientMixin<Less
                     }
                   }
                 }
+            )
+      );
+      }}
             );
-        }
-        });
-    }
+  }
 
   @protected
   Future<String> loadWidget(BuildContext context, bool isInit) async {
