@@ -32,19 +32,24 @@ class ProblemViewerState extends State<ProblemViewer> with AutomaticKeepAliveCli
       return -1;
     return 1;
   }
-  String checkAns(String num, String den, String ans){
+//  3 question types: 1 is linear equation; 2 is len/width of matrix; 3 is det
+  String checkAns(String num, String den, String ans, String questionType){
     int n = int.parse(num);
     int d = int.parse(den);
 
     List<String> s = ans.split("}");
     int numAns = int.parse(s[0].substring(1));
     int denAns = int.parse(s[1].substring(1));
-    if (n == numAns && d == denAns){ //equal -- right ans
+    if (questionType!="cde3ga0zlmRWzPPyCFgV" && n == numAns && d == denAns){ //equal -- right ans
       right = true;
       return "Your answer is correct! Yay :)";
     }
-    else if((numAns/denAns - n/d)<.0000001 && sign(n/d) == sign(numAns/denAns)){//equal but not simplified
+    //only lin eq has simplifying
+    else if(questionType=="w7N6Foj7vLd8q6l1j66R" && (numAns/denAns - n/d)<.0000001 && sign(n/d) == sign(numAns/denAns)){//equal but not simplified
       return "Your answer is technically correct, but it is not fully simplified";
+    }
+    else if(questionType=="cde3ga0zlmRWzPPyCFgV" && n == numAns){
+      return "Your answer is correct! Yay :)";
     }
     else{//not eqal - wrong
       return "Wrong answer, try again!";
@@ -160,7 +165,7 @@ class ProblemViewerState extends State<ProblemViewer> with AutomaticKeepAliveCli
                                       return AlertDialog(
                                         content: Text(checkAns(
                                             numText.text, denText.text,
-                                            info['answer'])),
+                                            info['answer'], this.id)),
                                       );
                                     }
                                 );
