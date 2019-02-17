@@ -7,6 +7,7 @@ import 'dashboard.dart';
 import 'api.dart';
 import 'lessons.dart';
 import 'lesson.dart';
+import 'problemviewer.dart';
 
 
 abstract class ListItem {}
@@ -20,8 +21,8 @@ class TopicItem implements ListItem {
   final String topicName;
   final String id;
   final int mastery;
-  final int cando;
-  TopicItem(this.topicName, this.id, this.mastery, this.cando);
+  final int haveLearned;
+  TopicItem(this.topicName, this.id, this.mastery, this.haveLearned);
 }
 
 class Practice extends StatefulWidget {
@@ -68,15 +69,6 @@ class PracticeState extends State<Practice> with AutomaticKeepAliveClientMixin<P
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
           if(!snapshot.hasData) {
             return new Scaffold(
-              appBar: AppBar(
-                title: Text(name),
-                leading: IconButton(
-                    icon: Icon(Icons.arrow_back, color: Color(0xFFFFFFFFF)),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    }
-                ),
-              ),
               body: Padding(
                   padding: EdgeInsets.all(16.0),
                   child: Center(
@@ -92,17 +84,17 @@ class PracticeState extends State<Practice> with AutomaticKeepAliveClientMixin<P
             listItems.add(new HeadingItem("Algebra"));
             debugPrint(topics["0"].keys.length.toString());
             topics["0"].keys.forEach((value) {
-              listItems.add(new TopicItem(topics["0"][value]["name"], topics["0"][value]["id"], topics["0"][value]["mastery"], topics["0"][value]["haveDependencies"]));
+              listItems.add(new TopicItem(topics["0"][value]["name"], topics["0"][value]["id"], topics["0"][value]["mastery"], topics["0"][value]["haveAleadyLearned"]));
             });
             listItems.add(new HeadingItem("Trigonometry"));
             debugPrint(topics["1"].keys.length.toString());
             topics["1"].keys.forEach((value) {
-              listItems.add(new TopicItem(topics["1"][value]["name"], topics["1"][value]["id"], topics["1"][value]["mastery"], topics["1"][value]["haveDependencies"]));
+              listItems.add(new TopicItem(topics["1"][value]["name"], topics["1"][value]["id"], topics["1"][value]["mastery"], topics["1"][value]["haveAleadyLearned"]));
             });
             listItems.add(new HeadingItem("Matricies"));
             debugPrint(topics["2"].keys.length.toString());
             topics["2"].keys.forEach((value) {
-              listItems.add(new TopicItem(topics["2"][value]["name"], topics["2"][value]["id"], topics["2"][value]["mastery"], topics["2"][value]["haveDependencies"]));
+              listItems.add(new TopicItem(topics["2"][value]["name"], topics["2"][value]["id"], topics["2"][value]["mastery"], topics["2"][value]["haveAleadyLearned"]));
             });
 
             isInit = false;
@@ -127,7 +119,7 @@ class PracticeState extends State<Practice> with AutomaticKeepAliveClientMixin<P
                   }
                   else if(item is TopicItem) {
                     Icon rightIcon;
-                    if(item.cando == 0)
+                    if(item.haveLearned == 0)
                       rightIcon = new Icon(Icons.indeterminate_check_box ,color: const Color(0xFF000000));
                     else if(item.mastery == 0)
                       rightIcon = new Icon(Icons.radio_button_unchecked ,color: const Color(0xFF000000));
@@ -135,43 +127,32 @@ class PracticeState extends State<Practice> with AutomaticKeepAliveClientMixin<P
                       rightIcon = new Icon(Icons.star ,color: const Color(0xFF000000));
 
                     String state;
-                    if(item.cando == 0) {
-                      state = "Need to Complete Prerequisites";
+                    if(item.haveLearned == 0) {
+                      state = "Need to Learn";
                     }
-                    else if(item.mastery == 0){
-                      state = "Ready to Learn!";
+                    else {
+                      state = "Ready to Practice";
                     }
-                    else if(item.mastery == 2){
-                      state = "You're Proficient!";
-                    }
-                    else if(item.mastery == 3){
-                      state = "You're a Master! Nice Job!";
-                    }
-                    if(item.cando == 1) {
+                    if(item.haveLearned == 1) {
                       return ListTile(
                           title: Text(item.topicName),
                           subtitle: Text(state),
-                          trailing: rightIcon
+                          trailing: rightIcon,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProblemViewer(id: item.id),
+                              ),
+                            );
+                          }
                       );
                     }
                     else {
-                      return Container (
-                          decoration: new BoxDecoration (
-                              color: new Color(0xFFA8A8A8)
-                          ),
-                          child: new ListTile(
-                            onTap: (){
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => Lesson(id: item.id, name: item.topicName),
-                                ),
-                              );
-                            },
+                      return new ListTile(
                             title: Text(item.topicName),
                             subtitle: Text(state),
-                            trailing: rightIcon,
-                          )
+                            trailing: rightIcon
                       );
                     }
                   }

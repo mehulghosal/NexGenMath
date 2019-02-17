@@ -14,6 +14,7 @@ class Lesson extends StatelessWidget {
   final String name;
   String email;
 
+
   // In the constructor, require a Todo
   Lesson({Key key, @required this.id, @required this.name}) : super();
 
