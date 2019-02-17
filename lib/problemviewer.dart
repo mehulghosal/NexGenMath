@@ -16,12 +16,34 @@ class ProblemViewer extends StatefulWidget {
 class ProblemViewerState extends State<ProblemViewer> with AutomaticKeepAliveClientMixin<ProblemViewer> {
   final String id;
   String problem;
+  final numText = TextEditingController();
+  final denText = TextEditingController();
+
 
   @override
   bool get wantKeepAlive => true;
 
   // In the constructor, require a Todo
   ProblemViewerState({Key key, @required this.id}) : super();
+
+
+  static String checkAns(String num, String den, String ans){
+    int n = int.parse(num);
+    int d = int.parse(den);
+
+    List<String> s = ans.split("}");
+    int numAns = int.parse(s[0].substring(1));
+    int denAns = int.parse(s[1].substring(1));
+    if (n == numAns && d == denAns){ //equal -- right ans
+      return "Your answer is correct! Yay :)";
+    }
+    else if(n/numAns == d/denAns){//equal but not simplified
+      return "Your answer is technically correct, but it is not fully simplified";
+    }
+    else{//not eqal - wrong
+      return "Wrong answer, try again!";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +102,7 @@ class ProblemViewerState extends State<ProblemViewer> with AutomaticKeepAliveCli
                       Container(
                         alignment: Alignment(0, -0.5),
                         child: TextField(
+                          controller: numText,
                           decoration: new InputDecoration(
                               labelText: "Enter The NUMERATOR for your solution"),
                           keyboardType: TextInputType.number,
@@ -88,6 +111,7 @@ class ProblemViewerState extends State<ProblemViewer> with AutomaticKeepAliveCli
                       Container(
                         alignment: Alignment(0, -0.25),
                         child: TextField(
+                          controller: denText,
                           decoration: new InputDecoration(
                               labelText: "Enter The DENOMINATOR for your solution"),
                           keyboardType: TextInputType.number,
@@ -95,12 +119,22 @@ class ProblemViewerState extends State<ProblemViewer> with AutomaticKeepAliveCli
                       ),
                       Container(
                           alignment: Alignment(0, 0),
-                          child: RaisedButton(
+                          child: MaterialButton(
+                            color: Theme.of(context).buttonColor,
+                            highlightColor: Theme.of(context).accentColor,
                             child: Text("Submit Answer"),
                             onPressed: () {
                               debugPrint(info['question']);
                               debugPrint(info['answer']); // In the Form "{NUM}{DENUM}"
                               debugPrint(info['solution']);
+                              return showDialog(
+                                context: context,
+                                builder: (context){
+                                  return AlertDialog(
+                                    content: Text(checkAns(numText.text, denText.text, info['answer'])),
+                                  );
+                                }
+                              );
                             },
                           )
                       ),
