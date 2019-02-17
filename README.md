@@ -24,6 +24,7 @@
 ##  Built With
 * Flutter, made by Google for cross platform usability on Android and iOS devices
 * We wrote our backend with Firebase
+	* All of the firebase code is located on branch "firebase"
 
 ## Limitations & Struggles
 * This is both of our first major exposure to Flutter, so we were uncomfortable to begin with
