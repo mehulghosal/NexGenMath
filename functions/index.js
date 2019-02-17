@@ -84,24 +84,26 @@ exports.getTopicsToPractice = functions.https.onRequest((req, res) => {
             var canAdd = 0;
             if(learnedClasses.includes(topic.id))
                 canAdd = 1;
+
             var mastery = 0;
             if(user.data().classesLearned.includes(topic.id))
-              master = 1;
-            else if(user.data().classesProficient.includes(topic.id))
-              master = 2
-            else if(user.data().classesMastered.includes(topic.id))
-              master = 3;
+              mastery = 1;
+            if(user.data().classesProficient.includes(topic.id))
+              mastery = 2;
+            if(user.data().classesMastered.includes(topic.id))
+              mastery = 3;
+
             finalList[topic.data().category][topic.id] = {"id": topic.id, "name": topic.data().name, 'mastery': mastery, 'haveAleadyLearned': canAdd};
         });
         newList = {0: {}, 1: {}, 2: {}};
         [0,1,2].forEach(function(d) {
           var count = 0;
           Object.keys(finalList[d]).sort(function(a,b){
-            if(finalList[d][a]['mastery'] !== finalList[d][b]['mastery']) {
-              return -finalList[d][b]['mastery'] + finalList[d][a]['mastery'];
+            if(finalList[d][a]['haveAleadyLearned'] !== finalList[d][b]['haveAleadyLearned']) {
+              return finalList[d][b]['haveAleadyLearned'] - finalList[d][a]['haveAleadyLearned'];
             }
             else {
-              return finalList[d][b]['haveAleadyLearned'] - finalList[d][a]['haveAleadyLearned'];
+              return -finalList[d][b]['mastery'] + finalList[d][a]['mastery'];
             }
           }).forEach(function(a) {
             newList[d][count] = finalList[d][a];
@@ -127,7 +129,8 @@ exports.markAsLearned = functions.https.onRequest((req, res) => {
   const e = req.query.email;
   return admin.firestore().collection("users").doc(e).get().then(function(info) {
     var c = info.data().classesLearned;
-    c.push(l);
+    if(!c.includes(l))
+      c.push(l);
     admin.firestore().collection("users").doc(e).update({
       "classesLearned": c
     });
@@ -274,6 +277,20 @@ exports.setupAccount = functions.auth.user().onCreate((user) => {
       classesLearned: [],
       classesProficient: [],
       classesMastered: []
+  });
+});
+
+exports.markAsProficient = functions.https.onRequest((req, res) => {
+  const l = req.query.lessonID;
+  const e = req.query.email;
+  return admin.firestore().collection("users").doc(e).get().then(function(info) {
+    var c = info.data().classesProficient;
+    if(!c.includes(l))
+      c.push(l);
+    admin.firestore().collection("users").doc(e).update({
+      "classesProficient": c
+    });
+    return res.status(200).send("hello");
   });
 });
 
