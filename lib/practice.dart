@@ -108,13 +108,13 @@ class PracticeState extends State<Practice> with AutomaticKeepAliveClientMixin<P
                 itemCount: listItems.length,
                 itemBuilder: (context, index) {
                   final item = listItems[index];
-                  bool tapped = true;
                   if (item is HeadingItem) {
                     return MaterialButton(
-                      onTap: (){
-                        tapped = !tapped;
+                      highlightColor: Theme.of(context).accentColor,
+                      onPressed: (){
+
                       },
-                      title: Text(
+                      child: Text(
                         item.heading,
                         style: Theme
                             .of(context)
@@ -123,7 +123,7 @@ class PracticeState extends State<Practice> with AutomaticKeepAliveClientMixin<P
                       ),
                     );
                   }
-                  else if(tapped == true && item is TopicItem) {
+                  else if(item is TopicItem) {
                     Icon rightIcon;
                     if(item.cando == 0)
                       rightIcon = new Icon(Icons.indeterminate_check_box ,color: const Color(0xFF000000));
