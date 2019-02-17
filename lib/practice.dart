@@ -158,6 +158,14 @@ class PracticeState extends State<Practice> with AutomaticKeepAliveClientMixin<P
                               color: new Color(0xFFA8A8A8)
                           ),
                           child: new ListTile(
+                            onTap: (){
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Lesson(id: item.id, name: item.topicName),
+                                ),
+                              );
+                            },
                             title: Text(item.topicName),
                             subtitle: Text(state),
                             trailing: rightIcon,
