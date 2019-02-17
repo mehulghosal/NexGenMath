@@ -149,10 +149,15 @@ class PracticeState extends State<Practice> with AutomaticKeepAliveClientMixin<P
                       );
                     }
                     else {
-                      return new ListTile(
+                      return  Container (
+                          decoration: new BoxDecoration (
+                          color: new Color(0xFFA8A8A8)
+                          ),
+                          child: new  ListTile(
                             title: Text(item.topicName),
                             subtitle: Text(state),
                             trailing: rightIcon
+                        )
                       );
                     }
                   }
