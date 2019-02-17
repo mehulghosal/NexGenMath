@@ -1,8 +1,26 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'dart:convert';
 import 'dashboard.dart';
 import 'api.dart';
+
+
+abstract class ListItem {}
+class HeadingItem implements ListItem {
+  final String heading;
+  HeadingItem(this.heading);
+}
+
+// A ListItem that contains data to display a message
+class TopicItem implements ListItem {
+  final String topicName;
+  final String id;
+  final int mastery;
+  final int cando;
+  TopicItem(this.topicName, this.id, this.mastery, this.cando);
+}
 
 class Practice extends StatefulWidget {
   @override
@@ -41,171 +59,126 @@ class PracticeState extends State<Practice> with AutomaticKeepAliveClientMixin<P
 
   }
 
-  List<String> getStr(){
-    List<String> text = [];
-    for(int i = 0; i<subjectData.length-1; i++){
-      if(buttonState[i] % 2 == 0){
-        text.add(subjectData[i]);
-      }
-      else{
-        text.add("");
-      }
-    }
-    return text;
-  }
-
-  Widget getWidgets(List<String> strings) {
-    List<Widget> list = new List<Widget>();
-    for(var i = 0; i < subjectData.length; i++){
-      list.add(new Container(
-                child:Text(strings[i])));
-    }
-//    return list
-    return new Column(children: list);
-  }
-
-  void fillValues(String d){
-    d = d.substring(1, d.length-4);
-
-  }
-
   @override
   Widget build(BuildContext context) {
     return new FutureBuilder<String>(
         future: loadWidget(context, isInit),
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-          if (!snapshot.hasData) {
-            return new Text("awaiting result");
-          } else {
-            String toPrint = snapshot.data.toString();
-            knownData = toPrint;
-            isInit = false;
-            fillValues(knownData);
-
+          if(!snapshot.hasData) {
             return new Scaffold(
-              backgroundColor: Theme
-                  .of(context)
-                  .primaryColorLight,
-              body: new Stack(
-                children: <Widget>[
-                  Container(
-                      color: Theme
-                          .of(context)
-                          .splashColor,
-                      alignment: Alignment(0, -.9),
-                      height: 100,
-                      child: ListView(
-
-                        scrollDirection: Axis.horizontal,
-                        children: <Widget>[
-                          Container(
-
-                              child: MaterialButton(
-                                color: Theme
-                                    .of(context)
-                                    .primaryColorDark,
-                                highlightColor: Theme
-                                    .of(context)
-                                    .accentColor,
-                                splashColor: Theme
-                                    .of(context)
-                                    .accentColor,
-                                onPressed: () {
-                                  setState(() {
-                                    buttonState[0] += 1;
-                                  });
-                                },
-                                child: Text(
-                                  "Algebra",
-                                  style: TextStyle(
-                                      fontSize: 25,
-                                      color: Theme
-                                          .of(context)
-                                          .primaryColorLight
-                                  ),
-                                ),
-                                minWidth: WIDTH,
-                            )
-
-                          ),
-                          Container(
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  left: BorderSide(width: 1.0, color: Color(0xFFa9a9aa)),
-                                  right: BorderSide(width: 1.0, color: Color(0xFFa9a9aa)),
-                                ),
-                              ),
-
-                              child: MaterialButton(
-                                color: Theme
-                                    .of(context)
-                                    .primaryColorDark,
-                                highlightColor: Theme
-                                    .of(context)
-                                    .accentColor,
-                                splashColor: Theme
-                                    .of(context)
-                                    .accentColor,
-                                onPressed: () {
-                                  setState(() {
-                                    buttonState[1] += 1;
-                                  });
-                                },
-                                child: Text(
-                                  "Trigonometry",
-                                  style: TextStyle(
-                                      fontSize: 25,
-                                      color: Theme
-                                          .of(context)
-                                          .primaryColorLight
-                                  ),
-                                ),
-                                minWidth: WIDTH,
-                              )
-
-                          ),
-                          Container(
-
-                              child: MaterialButton(
-                                color: Theme
-                                    .of(context)
-                                    .primaryColorDark,
-                                highlightColor: Theme
-                                    .of(context)
-                                    .accentColor,
-                                splashColor: Theme
-                                    .of(context)
-                                    .accentColor,
-                                onPressed: () {
-                                  setState(() {
-                                    buttonState[2] += 1;
-                                  });
-                                },
-                                child: Text(
-                                  "Matrices",
-                                  style: TextStyle(
-                                      fontSize: 25,
-                                      color: Theme
-                                          .of(context)
-                                          .primaryColorLight
-                                  ),
-                                ),
-                                minWidth: WIDTH,
-                              )
-
-                          ),
-
-                        ],
-                      )
-                  ),
-                  getWidgets(getStr())
-                ],
-//                children.add(getWidgets(getStr()))
+              appBar: AppBar(
+                title: Text(name),
+                leading: IconButton(
+                    icon: Icon(Icons.arrow_back, color: Color(0xFFFFFFFFF)),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    }
+                ),
               ),
+              body: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Center(
+                    child: new CircularProgressIndicator(),
+                  )
+              ),
+            );
+          } else {
+            List<ListItem> listItems = [];
+            Map<String, dynamic> topics = jsonDecode(snapshot.data.toString());
+            debugPrint(topics.keys.length.toString());
+
+            listItems.add(new HeadingItem("Algebra"));
+            debugPrint(topics["0"].keys.length.toString());
+            topics["0"].keys.forEach((value) {
+              listItems.add(new TopicItem(topics["0"][value]["name"], topics["0"][value]["id"], topics["0"][value]["mastery"], topics["0"][value]["haveDependencies"]));
+            });
+            listItems.add(new HeadingItem("Trigonometry"));
+            debugPrint(topics["1"].keys.length.toString());
+            topics["1"].keys.forEach((value) {
+              listItems.add(new TopicItem(topics["1"][value]["name"], topics["1"][value]["id"], topics["1"][value]["mastery"], topics["1"][value]["haveDependencies"]));
+            });
+            listItems.add(new HeadingItem("Matricies"));
+            debugPrint(topics["2"].keys.length.toString());
+            topics["2"].keys.forEach((value) {
+              listItems.add(new TopicItem(topics["2"][value]["name"], topics["2"][value]["id"], topics["2"][value]["mastery"], topics["2"][value]["haveDependencies"]));
+            });
+
+            isInit = false;
+            return new ListView.builder(
+                itemCount: listItems.length,
+                itemBuilder: (context, index) {
+                  final item = listItems[index];
+                  if (item is HeadingItem) {
+                    return MaterialButton(
+                      highlightColor: Theme.of(context).accentColor,
+                      onPressed: (){
+
+                      },
+                      child: Text(
+                        item.heading,
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .headline,
+                      ),
+                    );
+                  }
+                  else if(item is TopicItem) {
+                    Icon rightIcon;
+                    if(item.cando == 0)
+                      rightIcon = new Icon(Icons.indeterminate_check_box ,color: const Color(0xFF000000));
+                    else if(item.mastery == 0)
+                      rightIcon = new Icon(Icons.radio_button_unchecked ,color: const Color(0xFF000000));
+                    else
+                      rightIcon = new Icon(Icons.star ,color: const Color(0xFF000000));
+
+                    String state;
+                    if(item.cando == 0) {
+                      state = "Need to Complete Prerequisites";
+                    }
+                    else if(item.mastery == 0){
+                      state = "Ready to Learn!";
+                    }
+                    else if(item.mastery == 2){
+                      state = "You're Proficient!";
+                    }
+                    else if(item.mastery == 3){
+                      state = "You're a Master! Nice Job!";
+                    }
+                    if(item.cando == 1) {
+                      return ListTile(
+                          title: Text(item.topicName),
+                          subtitle: Text(state),
+                          trailing: rightIcon
+                      );
+                    }
+                    else {
+                      return Container (
+                          decoration: new BoxDecoration (
+                              color: new Color(0xFFA8A8A8)
+                          ),
+                          child: new ListTile(
+                            onTap: (){
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Lesson(id: item.id, name: item.topicName),
+                                ),
+                              );
+                            },
+                            title: Text(item.topicName),
+                            subtitle: Text(state),
+                            trailing: rightIcon,
+                          )
+                      );
+                    }
+                  }
+                }
             );
           }
         });
   }
+
   @protected
   Future<String> loadWidget(BuildContext context, bool isInit) async {
     debugPrint("executed " + (isInit?"for the first time":"again"));
