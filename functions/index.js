@@ -211,7 +211,7 @@ exports.getPracticeProblem =  functions.https.onRequest((req, res) => {
             answer = "{" + -reduced[0] + "}{" + reduced[1] + "}";
           }
           else {
-            solution += "This leaves you with %5Cx = %5Cfrac{" + (c-b) + "}{" + a + "}%5C), which then can be reduced into ";
+            solution += "This leaves you with %5C(x = %5Cfrac{" + (c-b) + "}{" + a + "}%5C), which then can be reduced into ";
             solution += "%5C(%5Cfrac{" + reduced[0] + "}{" + reduced[1] + "}%5C)."
             answer = "{" + reduced[0] + "}{" + reduced[1] + "}";
           }
