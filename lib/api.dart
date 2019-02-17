@@ -40,5 +40,14 @@ class API {
       return response.body;
     });
   }
+  static Future<String> getProblem(String id) {
+    debugPrint("started api call");
+    var url = "https://us-central1-nexgenmath.cloudfunctions.net/getPracticeProblem?&lessonID=" + id;
+    debugPrint(url);
+    return http.post(url).then((response) {
+      debugPrint("finished api call");
+      return response.body;
+    });
+  }
 
 }

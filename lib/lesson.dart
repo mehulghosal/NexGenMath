@@ -23,7 +23,9 @@ class Lesson extends StatelessWidget {
       future: loadWidget(context),
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         if (!snapshot.hasData) {
+
           return new Scaffold(
+              backgroundColor: Theme.of(context).primaryColorLight,
             appBar: AppBar(
               title: Text(name),
               leading: IconButton(
@@ -51,6 +53,7 @@ class Lesson extends StatelessWidget {
           debugPrint(url);
           // Use the Todo to create our UI
           return Scaffold(
+            backgroundColor: Theme.of(context).primaryColorLight,
               appBar: AppBar(
                 title: Text(name),
                 leading: IconButton(
@@ -103,7 +106,6 @@ class Lesson extends StatelessWidget {
                                 API.markAsDone(email, id);
                                 Navigator.of(context).pop();
                                 Navigator.of(context).pop();
-                                Lessons.of(context).refresh();
                               },
                             ),
                           ],
@@ -141,7 +143,6 @@ class Lesson extends StatelessWidget {
                                 API.markAsDone(email, id);
                                 Navigator.of(context).pop();
                                 Navigator.of(context).pop();
-                                Dashboard.of(context).onPageChanged(0);
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(

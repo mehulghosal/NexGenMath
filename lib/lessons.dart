@@ -91,15 +91,7 @@ class LessonState extends State<Lessons> { //with AutomaticKeepAliveClientMixin<
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
           if(!snapshot.hasData) {
             return new Scaffold(
-              appBar: AppBar(
-                title: Text(""),
-                leading: IconButton(
-                    icon: Icon(Icons.arrow_back, color: Color(0xFFFFFFFFF)),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    }
-                ),
-              ),
+              backgroundColor: Theme.of(context).primaryColorLight,
               body: Padding(
                   padding: EdgeInsets.all(16.0),
                   child: Center(
@@ -174,18 +166,18 @@ class LessonState extends State<Lessons> { //with AutomaticKeepAliveClientMixin<
                     }
                     if(item.cando == 1) {
                       return ListTile(
-                          title: Text(item.topicName),
-                          subtitle: Text(state),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Lesson(id: item.id, name: item.topicName),
-                              ),
-                            );
-                          },
-                          trailing: rightIcon
-                      );
+                            title: Text(item.topicName),
+                            subtitle: Text(state),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Lesson(id: item.id, name: item.topicName),
+                                ),
+                              );
+                            },
+                            trailing: rightIcon
+                        );
                     }
                     else {
                       return Container (

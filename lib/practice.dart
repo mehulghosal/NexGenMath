@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'dart:convert';
 import 'dashboard.dart';
 import 'api.dart';
+import 'lessons.dart';
+import 'lesson.dart';
 
 
 abstract class ListItem {}
