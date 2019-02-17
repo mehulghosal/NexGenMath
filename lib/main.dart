@@ -26,7 +26,6 @@ class App extends StatelessWidget {
       routes: {
         '/': (_) => new Login(),
         '/dashboard': (_) => new Dashboard(),
-
       },
     );
   }

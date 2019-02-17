@@ -22,4 +22,14 @@ class API {
       return response.body;
     });
   }
+  static Future<String> getLessonDetails(String id) {
+    debugPrint("started api call");
+    var url = "https://us-central1-nexgenmath.cloudfunctions.net/getLesson?lessonID=" + id;
+    debugPrint(url);
+    return http.post(url).then((response) {
+      debugPrint("finished api call");
+      return response.body;
+    });
+  }
+
 }
