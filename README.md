@@ -39,7 +39,7 @@
 * Obviously, we will be constantly adding new topics - we hope to maintain this app for a while
 * We can also look into running outreach campaigns targeted to schools to increase the use of our app in the daily lives of students
 
-##hackNYU 2019
+## hackNYU 2019
 * Education track
 * Best use of Google technologies
 * Facebook's mission of building communities
