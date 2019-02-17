@@ -16,6 +16,7 @@ class ProblemViewer extends StatefulWidget {
 class ProblemViewerState extends State<ProblemViewer> with AutomaticKeepAliveClientMixin<ProblemViewer> {
   final String id;
   String problem;
+  bool right = false;
   final numText = TextEditingController();
   final denText = TextEditingController();
 
@@ -27,7 +28,7 @@ class ProblemViewerState extends State<ProblemViewer> with AutomaticKeepAliveCli
   ProblemViewerState({Key key, @required this.id}) : super();
 
 
-  static String checkAns(String num, String den, String ans){
+  String checkAns(String num, String den, String ans){
     int n = int.parse(num);
     int d = int.parse(den);
 
@@ -35,9 +36,10 @@ class ProblemViewerState extends State<ProblemViewer> with AutomaticKeepAliveCli
     int numAns = int.parse(s[0].substring(1));
     int denAns = int.parse(s[1].substring(1));
     if (n == numAns && d == denAns){ //equal -- right ans
+      right = true;
       return "Your answer is correct! Yay :)";
     }
-    else if(n/numAns == d/denAns){//equal but not simplified
+    else if((n/numAns - d/denAns)<.0000001){//equal but not simplified
       return "Your answer is technically correct, but it is not fully simplified";
     }
     else{//not eqal - wrong
@@ -120,6 +122,7 @@ class ProblemViewerState extends State<ProblemViewer> with AutomaticKeepAliveCli
                       Container(
                           alignment: Alignment(0, 0),
                           child: MaterialButton(
+                            textColor: Theme.of(context).primaryColorLight,
                             color: Theme.of(context).buttonColor,
                             highlightColor: Theme.of(context).accentColor,
                             child: Text("Submit Answer"),
@@ -138,6 +141,25 @@ class ProblemViewerState extends State<ProblemViewer> with AutomaticKeepAliveCli
                             },
                           )
                       ),
+                      Container(
+                        alignment: Alignment(0, 0.2),
+                        child: MaterialButton(
+                            color: Theme.of(context).buttonColor,
+                            textColor: Theme.of(context).primaryColorLight,
+                            highlightColor: Theme.of(context).accentColor,
+                            onPressed: (){
+                              return showDialog(
+                                  context: context,
+                                  builder: (context){
+                                    return AlertDialog(
+                                      content: Text(info['solution']),
+                                    );
+                                  }
+                              );
+                            },
+                            child: Text("View Solution")
+                        ),
+                      )
                     ]
                 ),
               ),
