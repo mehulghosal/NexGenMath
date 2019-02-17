@@ -9,8 +9,8 @@
 * We are both juniors in high school, and although we are very STEM oriented students, we sometimes have trouble understanding math class
 * Abstract math is had enough; not having good teachers makes comprehending difficult topics near impossible
 * We spent hours trying to teach ourselves these subjects - even the most comprehensive study helpers, like Khan Academy or Youtube don't have everything we want
-* there are decent teachers online, but not enough practice problems are available to test our understanding
-* the few problems you might scrap together rarely, if ever come with helpful solutions
+* There are decent teachers online, but not enough practice problems are available to test our understanding
+* The few problems you might scrap together rarely, if ever come with helpful solutions
 
 ## The App
 * The app we built, called 'Nex Gen Math' is meant to solve these problems
@@ -26,7 +26,7 @@
 * We wrote our backend with Firebase, also made by Google
 
 ## Limitations
-* This is both of our's first major exposure to Flutter, so we were uncomfortable to begin with
+* This is both of our first major exposure to Flutter, so we were uncomfortable to begin with
 	* Dart is almost based on Java, but there are enough synactical and logical differences to cause us to stumble about
 	* integrating the backend api and modifying design elements were especially tricky
 * Also, because of time limitations, we could not fully write every lesson plan and come up with all kinds of problems
